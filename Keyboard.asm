@@ -1,10 +1,10 @@
 UP_KEY equ 1
-DOWN_KEY equ 2
-LEFT_KEY equ 3
-RIGHT_KEY equ 4
+DOWN_KEY equ 3
+LEFT_KEY equ 4
+RIGHT_KEY equ 2
 PAUSE_KEY equ 5
 ENTER_KEY equ 6
-
+QUIT_KEY equ 7
 section .text
 GetKey:
     push ax
@@ -67,10 +67,12 @@ GetKey:
 
     GetKey.end:
     call Quit
+    mov al, QUIT_KEY
     jmp GetKey.finish
     
 
     GetKey.default:
+    call Move
     mov al,0
     jmp GetKey.finish
 
@@ -78,7 +80,7 @@ GetKey:
     mov [now_key], al
     pop ax
     ret
-    
+
     GetKey.null:
     mov al,0
     mov [now_key],al

@@ -2,7 +2,7 @@ SCREEN_SIZE equ 2000
 SCREEN_WIDTH equ 80
 SCREEN_HEIGH equ 25
 VIDEO_ADDRESS equ 0xB800
-
+BLANK equ 0x0700
 section .text
 
 ; 清空屏幕并保存原屏幕信息
@@ -20,6 +20,7 @@ ScreenInit:
         add di,2
     loop ScreenInit.save
     call ClearScreen
+    call HideCursor
     pop cx
     pop ax
     ret
@@ -33,7 +34,7 @@ ClearScreen:
     mov di, ax
     mov cx, SCREEN_SIZE
     ClearScreen.clear:
-        mov word [es:di],0x0700
+        mov word [es:di],BLANK
         add di,2
     loop ClearScreen.clear
     pop cx
@@ -53,9 +54,13 @@ Quit:
         mov word [es:di], ax
         add di,2
     loop Quit.return
+    ;call DeleteAllPtr
+    call DisplayCursor
     pop cx
     pop ax
-    int 20h
+    mov ax,4ch
+    int 21h
+    ret
 
 ; 绘制一条线
 ; void DrawLine(u16 x,u16 y,u16 x_len ,u16 y_len, u16 charactor)
@@ -197,6 +202,87 @@ DrawVerticalWhiteLine:
     pop bp
     ret
 
-section .data
+DrawSquare:
+    push bp
+    mov bp,sp
 
+    push ax
+    mov ax, VIDEO_ADDRESS
+    mov es,ax
+
+    mov ax,word [bp+6]
+    mov di,ax
+
+    mov ax,word [bp+4]
+
+    mov word [es:di],ax
+    add di,2
+    mov word [es:di],ax
+
+    pop ax
+    mov sp, bp
+    pop bp
+    ret
+HideCursor:
+    push dx
+    push bx
+    push ax
+	mov dx, 03d4h
+    ; 保存原光标位置
+    mov al, 0eh
+	out dx, al
+	inc dx
+	in al,dx
+    mov bh,al
+	dec dx
+	mov al, 0fh
+	out dx, al
+	inc dx
+	in al,dx
+    mov bl,al
+    mov word [old_cursor],bx
+    dec dx
+
+    ; 隐藏光标
+    mov bx, 25*80+1
+    mov al, 0eh
+	out dx, al
+	inc dx
+	mov al,bh
+    out dx,al
+	dec dx
+	mov al, 0fh
+	out dx, al
+	inc dx
+	mov al,bl
+    out dx,al
+
+    pop ax
+    pop bx
+    pop dx
+    ret
+DisplayCursor:
+    push dx
+    push bx
+    push ax
+
+    mov bx, word [old_cursor]
+    mov al, 0eh
+	out dx, al
+	inc dx
+	mov al,bh
+    out dx,al
+	dec dx
+	mov al, 0fh
+	out dx, al
+	inc dx
+	mov al,bl
+    out dx,al
+
+    pop ax
+    pop bx
+    pop dx
+    ret
+section .data
+old_cursor dw 0
 old_screen: times SCREEN_SIZE dw 0x0

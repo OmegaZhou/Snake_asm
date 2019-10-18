@@ -1,4 +1,4 @@
-UNIT_TIME equ 10
+UNIT_TIME equ 3
 
 section .text
 ; 初始化计时器

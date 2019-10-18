@@ -2,6 +2,14 @@ FOOD_CHAR equ 0x0703
 LAMDA equ 51
 MOD equ 0xffff
 section .text
+
+CheckFood:
+    call CheckFoodExist
+    cmp ax,0
+    jz CheckFood.not_exist
+    CheckFood.not_exist:
+    
+
 SetNewFood:
     push ax
     push dx
