@@ -23,7 +23,9 @@ TimerCheck:
     pop cx
     mov dh,dl
 	cmp dl, [last_time]
-	js TimerCheck.check_success
+	jns TimerCheck.next
+	add dl, 100
+	TimerCheck.next:
 	sub dl, [last_time]
 	cmp dl, UNIT_TIME
 	jns TimerCheck.check_success

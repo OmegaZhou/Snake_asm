@@ -24,6 +24,7 @@ GameStart:
     call SetNewFood
     mov al,0
     mov byte [is_end],al
+    mov byte [now_dir],al
     pop ax
     ret
 
