@@ -5,13 +5,23 @@ BOX_HEIGH equ 25
 
 section .text
 
+Init:
+    call ScreenInit
+    call MenuInit
+    call CreateMap
+	call MouseInit
+    ret
+
 GameStart:
     push ax
+    call ClearScreen
+    call CreateMap
     call SnakeInit
 	call TimerInit
-	call CreateMap
 	call SetSeed
     call StopPause
+    call MenuInit
+    call SetNewFood
     mov al,0
     mov byte [is_end],al
     pop ax
@@ -20,13 +30,14 @@ GameStart:
 MainController:
     MainController.loop:
     call KeyController
+    call MouseListen
     call CheckPause
     cmp al,1
 	jz MainController.loop
 	call TimerCheck
 	cmp al,0
 	jz MainController.loop
-    call Move
+    call RealMove
 	jmp MainController.loop
     ret
 KeyController:
@@ -63,13 +74,19 @@ StopPause:
     push ax
     mov al,0
     mov byte [is_pause],al
+    call HidePauseItem
     pop ax
     ret 
 
 Pause:
     push ax
+    cmp byte [is_end],1
+    jz Pause.end
     mov al,1
     mov byte [is_pause],al
+    call ContinueItemInit
+    call PauseItemInit
+    Pause.end:
     pop ax
     ret 
 
@@ -83,7 +100,8 @@ GameOver:
     push ax
     mov al,1
     mov byte [is_end],al
-    call Quit
+    call StopPause
+    call GameOverItemInit
     pop ax
     ret
 CreateMap:

@@ -3,6 +3,10 @@ SNAKE_INIT_LEN equ 4
 SNAKE_INIT_LOC equ (10*80+24)*2
 SNAKE_NODE_SIZE equ 4
 MEM_SIZE equ 7500
+MAX_RATE equ 40
+SPEED_UP equ 10
+ENLONGATE_NUM equ 3
+
 section .text
 SnakeInit:
     push ax
@@ -12,6 +16,7 @@ SnakeInit:
     mov es, ax
     mov ax, SNAKE_INIT_LOC
     mov di,ax
+    call DeleteAllPtr
     call CreateSnakePtr
     mov [header_str],ax
     mov bx,ax
@@ -148,12 +153,17 @@ CheckDirection:
     ret
 
 Move:
+    push ax
+    push bx
+    push cx
     call CheckDirection
+    call Enlongate
 
     mov cx,[header_str]
     mov ax,cx
     mov bx,[queue_start]
     add bx,mem
+
     call SnakeEndMove
     mov cl, [bx+3]
     cmp cl, 0
@@ -163,6 +173,12 @@ Move:
     Move.continue:
 
     call SnakeHeaderMove
+
+    call CheckFood
+
+    pop cx
+    pop bx
+    pop ax
     ret
 CreateSnakePtr:
     push bx
@@ -409,6 +425,34 @@ CheckWall:
     call GameOver
     mov ax,1
     ret
+Enlongate:
+    cmp word[food_num],ENLONGATE_NUM
+    jb Enlongate.finish
+    call SnakeHeaderMove
+    mov word[food_num],0
+    Enlongate.finish:
+    ret
+
+RealMove:
+    push ax
+    push dx
+    push cx
+    mov dx,0
+    mov ax,word [score]
+    mov cx,50
+    div cx
+    add ax,word [rate]
+    add ax,word [init_v]
+    mov word [rate],ax
+    cmp ax, MAX_RATE
+    jb RealMove.finish
+    mov word[rate],0
+    call Move
+    RealMove.finish:
+    pop cx
+    pop dx
+    pop ax
+    ret
 
 
 section .data
@@ -422,4 +466,7 @@ now_dir db 0
 queue_start dw 0
 queue_end dw 0
 
+init_v dw 0
+food_num dw 0
+rate dw 0
 mem: times MEM_SIZE db 0

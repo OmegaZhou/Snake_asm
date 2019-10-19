@@ -1,21 +1,35 @@
 FOOD_CHAR equ 0x0703
 LAMDA equ 51
 MOD equ 0xffff
+FOOD_SCORE equ 10
 section .text
-
-CheckFood:
-    call CheckFoodExist
-    cmp ax,0
-    jz CheckFood.not_exist
-    CheckFood.not_exist:
     
+CheckFood:
+    push ax
+    call CheckFoodExist
+    cmp ax, 1
+    jz CheckFood.finish
+    call SetNewFood
+    add byte [food_num],1
+    mov ax,FOOD_SCORE
+    add word [score],ax
+    call ShowScore
+    CheckFood.finish:
+    pop ax
+    ret
 
 SetNewFood:
+    push bp
+    mov bp,sp
+
     push ax
     push dx
     push cx
     push bx
+
+    mov cx,100
     SetNewFood.loop:
+    push cx
     call Rand
     mov dx,0
     mov bx,BOX_HEIGH
@@ -23,35 +37,43 @@ SetNewFood:
     mov ax,dx
     push ax
 
-    mov cx,200
+    mov cx,100
     SetNewFood.loop_y:
     call Rand
     mov dx,0
-    mov bx,BOX_WIDTH
+    mov bx,BOX_WIDTH-1
     div bx
     mov ax,dx
     push ax
-    
+
     call GetLocValue
     mov word [food_loc],ax
     pop ax
     
-
     call CheckBlank
     cmp ax, 1
     jz SetNewFood.success
     loop SetNewFood.loop_y
     pop ax
-    jmp SetNewFood.loop
+    pop cx
+    loop SetNewFood.loop
+
+    jmp SetNewFood.fail
 
     SetNewFood.success:
-    pop ax
+    
     call SetFoodValue
+    SetNewFood.fail:
+    pop ax
+    pop cx
 
     pop bx
     pop cx
     pop dx
     pop ax
+
+    mov sp,bp
+    pop bp
     ret
 
 
@@ -76,7 +98,7 @@ GetFoodValue:
 
 CheckBlank:
     call GetFoodValue
-    cmp ax, 0
+    cmp ax, BLANK
     jz CheckBlank.blank
     mov ax, 0
     ret

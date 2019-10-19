@@ -2,7 +2,7 @@ SCREEN_SIZE equ 2000
 SCREEN_WIDTH equ 80
 SCREEN_HEIGH equ 25
 VIDEO_ADDRESS equ 0xB800
-BLANK equ 0x0700
+BLANK equ 0x0720
 section .text
 
 ; 清空屏幕并保存原屏幕信息
@@ -33,8 +33,9 @@ ClearScreen:
     mov ax, 0
     mov di, ax
     mov cx, SCREEN_SIZE
+    mov ax,BLANK
     ClearScreen.clear:
-        mov word [es:di],BLANK
+        mov word [es:di],ax
         add di,2
     loop ClearScreen.clear
     pop cx
@@ -44,6 +45,8 @@ ClearScreen:
 Quit:
     push ax
     push cx
+    call DisplayCursor
+    call QuitMouse
     mov ax, VIDEO_ADDRESS
     mov es, ax
     mov ax, 0
@@ -55,7 +58,6 @@ Quit:
         add di,2
     loop Quit.return
     ;call DeleteAllPtr
-    call DisplayCursor
     pop cx
     pop ax
     mov ax,4ch
