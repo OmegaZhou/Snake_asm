@@ -62,30 +62,30 @@ GetKey:
     jmp GetKey.finish
 
     GetKey.esc:
-    mov al, PAUSE_KEY
-    jmp GetKey.finish
+    call Pause
+    mov al,0
+    jmp GetKey.null
 
     GetKey.end:
     call Quit
-    mov al, QUIT_KEY
-    jmp GetKey.finish
+    mov al, 0
+    jmp GetKey.null
     
 
     GetKey.default:
-    call Move
+    ;call Move
     mov al,0
-    jmp GetKey.finish
+    jmp GetKey.null
 
     GetKey.finish:
-    mov [now_key], al
+    mov [now_dir], al
     pop ax
     ret
 
     GetKey.null:
-    mov al,0
-    mov [now_key],al
+    ;mov al,0
+    ;mov [now_dir],al
     pop ax
     ret
 
 section .data
-now_key db 0

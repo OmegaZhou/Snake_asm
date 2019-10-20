@@ -30,7 +30,7 @@ GameStart:
 
 MainController:
     MainController.loop:
-    call KeyController
+    call GetKey
     call MouseListen
     call CheckPause
     cmp al,1
@@ -41,40 +41,14 @@ MainController:
     call RealMove
 	jmp MainController.loop
     ret
-KeyController:
-    call GetKey
-    push ax
-    mov al,[now_key]
-    cmp al,PAUSE_KEY
-    jz KeyController.pause
-    cmp al,QUIT_KEY
-    jz KeyController.quit
-    cmp al,0
-    jz KeyController.end
-    
-    jmp KeyController.dir
 
-    KeyController.pause:
-    call Pause
-    jmp KeyController.end
-    KeyController.quit:
-    call Quit
-    jmp KeyController.end
-    KeyController.dir:
-    mov byte [now_dir],al
-    jmp KeyController.end
-
-    KeyController.end:
-    mov al,0
-    mov byte [now_key],0
-    pop ax
-    ret
     
 
 StopPause:
     push ax
     mov al,0
     mov byte [is_pause],al
+    mov byte [now_dir],al
     call HidePauseItem
     pop ax
     ret 
