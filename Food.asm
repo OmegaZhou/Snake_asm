@@ -1,5 +1,5 @@
 FOOD_CHAR equ 0x0703
-LAMDA equ 51
+LAMDA equ 91
 MOD equ 0xffff
 FOOD_SCORE equ 10
 section .text
@@ -27,7 +27,7 @@ SetNewFood:
     push cx
     push bx
 
-    mov cx,100
+    mov cx,1
     SetNewFood.loop:
     push cx
     call Rand
@@ -37,7 +37,7 @@ SetNewFood:
     mov ax,dx
     push ax
 
-    mov cx,100
+    mov cx,150
     SetNewFood.loop_y:
     call Rand
     mov dx,0
@@ -51,7 +51,7 @@ SetNewFood:
     pop ax
     
     call CheckBlank
-    cmp ax, 1
+    cmp ax, 250
     jz SetNewFood.success
     loop SetNewFood.loop_y
     pop ax
