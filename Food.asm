@@ -27,7 +27,7 @@ SetNewFood:
     push cx
     push bx
 
-    mov cx,1
+    mov cx,150
     SetNewFood.loop:
     push cx
     call Rand
@@ -37,7 +37,7 @@ SetNewFood:
     mov ax,dx
     push ax
 
-    mov cx,150
+    mov cx,250
     SetNewFood.loop_y:
     call Rand
     mov dx,0
@@ -51,7 +51,7 @@ SetNewFood:
     pop ax
     
     call CheckBlank
-    cmp ax, 250
+    cmp ax, 1
     jz SetNewFood.success
     loop SetNewFood.loop_y
     pop ax
