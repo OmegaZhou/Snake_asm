@@ -3,7 +3,7 @@ BOX_START_Y equ 0
 BOX_WIDTH equ 51
 BOX_HEIGH equ 25
 
-section .text
+segment code
 
 Init:
     call ScreenInit
@@ -114,7 +114,7 @@ CreateMap:
     pop bp
     ret
 
-section .data
+segment data
 
 is_pause db     1
 

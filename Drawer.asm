@@ -3,7 +3,7 @@ SCREEN_WIDTH equ 80
 SCREEN_HEIGH equ 25
 VIDEO_ADDRESS equ 0xB800
 BLANK equ 0x0720
-section .text
+segment code
 
 ; 清空屏幕并保存原屏幕信息
 ScreenInit:
@@ -57,10 +57,10 @@ Quit:
         mov word [es:di], ax
         add di,2
     loop Quit.return
-    ;call DeleteAllPtr
+    call DeleteAllPtr
     pop cx
     pop ax
-    mov ax,4ch
+    mov ah,4ch
     int 21h
     ret
 
@@ -285,6 +285,6 @@ DisplayCursor:
     pop bx
     pop dx
     ret
-section .data
+segment data
 old_cursor dw 0
 old_screen: times SCREEN_SIZE dw 0x0

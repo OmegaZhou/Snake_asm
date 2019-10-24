@@ -7,7 +7,7 @@ MAX_RATE equ 40
 SPEED_UP equ 10
 ENLONGATE_NUM equ 3
 
-section .text
+segment code
 SnakeInit:
     push ax
     push cx
@@ -455,7 +455,7 @@ RealMove:
     ret
 
 
-section .data
+segment data
 ; Snake struct{
 ; loc dw
 ; dir db

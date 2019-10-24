@@ -1,5 +1,5 @@
 MOUSE_MASK equ 0x4
-section .text
+segment code
 MAX_X equ 639
 MIN_X equ ((BOX_WIDTH+1)*8)
 MouseListen:
@@ -156,4 +156,4 @@ HideMouse:
     int 33h
     pop ax
     ret
-section .data
+segment data

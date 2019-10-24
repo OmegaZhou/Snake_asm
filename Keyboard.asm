@@ -5,7 +5,7 @@ RIGHT_KEY equ 2
 PAUSE_KEY equ 5
 ENTER_KEY equ 6
 QUIT_KEY equ 7
-section .text
+segment code
 GetKey:
     push ax
     mov ah,0bh
@@ -88,4 +88,4 @@ GetKey:
     pop ax
     ret
 
-section .data
+segment data

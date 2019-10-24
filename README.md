@@ -4,7 +4,13 @@
 
 - 本次项目运行于实模式下以及使用大量dos中断来完成的，而Windows10并不支持dos程序，因此使用了dosbox作为运行环境
 - 汇编器：nasm
-- 汇编指令 `nasm -o ./snake.com ./main.asm`
+- 汇编指令 
+  - com文件：
+    - `nasm -o ./snake.com ./main.asm`
+  - exe文件: 
+    - `nasm -f obj ./main.asm -o ./snake.obj`
+    - `link snake.obj`
+    - 其中link为masm汇编器的链接器，用于连接生成16位的可执行文件
 
 ### 实现功能
 

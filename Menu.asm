@@ -37,7 +37,7 @@ EASY_SPEED equ (MAX_RATE/10)
 MID_SPEED equ (MAX_RATE/4)
 HARD_SPEED equ MAX_RATE
 
-section .text
+segment code
 
 MenuInit:
     call ScoreItemInit
@@ -332,7 +332,7 @@ PrintBlankStr:
     pop bp
     ret
 
-section .data
+segment data
 
 score_item db   " Score:",0
 return_item db  " Continue ",0

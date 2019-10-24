@@ -2,7 +2,7 @@ FOOD_CHAR equ 0x0703
 LAMDA equ 91
 MOD equ 0xffff
 FOOD_SCORE equ 10
-section .text
+segment code
     
 CheckFood:
     push ax
@@ -148,6 +148,6 @@ Rand:
     pop dx
     ret
 
-section .data
+segment data
 food_loc dw 0
 seed dw 0

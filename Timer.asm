@@ -1,6 +1,6 @@
 UNIT_TIME equ 3
 
-section .text
+segment code
 ; 初始化计时器
 TimerInit:
     push dx
@@ -40,5 +40,5 @@ TimerCheck:
     pop dx
 	ret
 
-section .data
+segment data
     last_time db 0
